@@ -18,7 +18,10 @@ var tables = []struct {
 	{"https://subdomain.dummydomain.com/", "site2", false},
 	{"https://subdomain.dummydomain.com/#asdf", "site2", false},
 
+	{"subdomain.dummydomain.com", "site2", false},
+
 	{"https://nonexistingdomain.com/query123", "", true},
+	{"https://dummydomain.com:8080/", "site1", false},
 	{"notadomain", "", true},
 	{"", "", true},
 }

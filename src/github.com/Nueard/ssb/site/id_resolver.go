@@ -21,7 +21,7 @@ func NewResolver(sites map[string]string) *Resolver {
 // Resolve takes a request url and finds the appropriate
 // website id it is for
 func (r *Resolver) Resolve(requestURL string) (string, error) {
-	u, err := url.ParseRequestURI(requestURL)
+	u, err := url.Parse(requestURL)
 	if err != nil {
 		return "", err
 	}

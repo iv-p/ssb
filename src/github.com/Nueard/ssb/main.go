@@ -9,10 +9,6 @@ import (
 )
 
 var tpl *template.Template
-var sites = map[string]string{
-	"dummydomain.com":           "site1",
-	"subdomain.dummydomain.com": "site2",
-}
 var resolver *site.Resolver
 
 func init() {
@@ -20,7 +16,7 @@ func init() {
 }
 
 func main() {
-	resolver = site.NewResolver(sites)
+	resolver = site.NewResolver(site.DummyData)
 	http.HandleFunc("/", index)
 	http.ListenAndServe(":8080", nil)
 }
