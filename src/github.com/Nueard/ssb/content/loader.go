@@ -17,21 +17,20 @@ func NewLoader() *Loader {
 // Load returns the page contents by id
 func (l *Loader) Load(siteContext site.Context, pageContext page.Context) Content {
 	return Content{
-		Layout: Layout{
-			Template: "layouts/simple-layout-one.html",
-		},
-		RootFragments: []FragmentID{
-			"1",
-		},
-		Fragments: map[FragmentID]Fragment{
-			"1": Fragment{
-				Template: "partials/1.html",
-				Fragments: []FragmentID{
-					"2",
+		Template: "layouts/simple-layout-one.html",
+		Fragments: map[string][]Fragment{
+			"main": []Fragment{
+				Fragment{
+					Template: "partials/1.html",
+					Fragments: map[string][]Fragment{
+						"what": []Fragment{
+							Fragment{
+								Template:  "partials/2.html",
+								Fragments: map[string][]Fragment{},
+							},
+						},
+					},
 				},
-			},
-			"2": Fragment{
-				Template: "partials/2.html",
 			},
 		},
 	}

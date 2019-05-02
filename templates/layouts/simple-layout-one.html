@@ -4,9 +4,8 @@
     <title>Go Web Programming</title>
   </head>
   <body>  
-    {{ $this := . }}
-    {{ range $fragmentID :=  .RootFragments }}
-      {{ CallTemplate (index $this.Fragments $fragmentID) }}
+    {{ range $fragment :=  .Fragments.main }}
+      {{ CallTemplate $fragment }}
     {{ end }}
   </body>
 </html>

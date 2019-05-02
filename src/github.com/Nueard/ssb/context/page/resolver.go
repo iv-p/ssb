@@ -28,7 +28,6 @@ func NewResolver(urlMapLoader IURLMapLoader) *Resolver {
 // site id it is for
 func (r *Resolver) Resolve(context site.Context, u *url.URL) (Context, error) {
 	domainMap := r.urlMapLoader.Load(context)
-	fmt.Println(u.Path)
 	pageID, ok := domainMap[u.Path]
 	if !ok {
 		return Context{}, fmt.Errorf("page id not found for request %s with path %s", u.String(), u.Path)

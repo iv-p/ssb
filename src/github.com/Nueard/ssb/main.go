@@ -35,7 +35,6 @@ func main() {
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	fmt.Print(r.URL)
 	u, err := url.Parse(fmt.Sprintf("http://%s%s", r.Host, r.RequestURI))
 	if err != nil {
 		w.WriteHeader(404)

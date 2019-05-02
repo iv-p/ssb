@@ -60,7 +60,6 @@ func (tl *TemplateLoader) Load() *template.Template {
 		if err != nil {
 			panic(err)
 		}
-		fmt.Println(f)
 	}
 
 	return tpl
