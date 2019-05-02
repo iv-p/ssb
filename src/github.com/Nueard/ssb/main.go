@@ -1,37 +1,69 @@
 package main
 
 import (
+	"fmt"
 	"html/template"
-	"log"
 	"net/http"
+	"net/url"
 
-	"github.com/Nueard/ssb/site"
+	"github.com/Nueard/ssb/content"
+	"github.com/Nueard/ssb/context/page"
+	"github.com/Nueard/ssb/context/site"
+	"github.com/Nueard/ssb/render"
 )
 
 var tpl *template.Template
-var resolver *site.Resolver
-
-func init() {
-	tpl = template.Must(template.ParseGlob("templates/*.html"))
-}
+var siteResolver *site.Resolver
+var pageResolver *page.Resolver
+var contentLoader *content.Loader
+var renderer *render.Renderer
 
 func main() {
-	resolver = site.NewResolver(site.DummyData)
+	domainMapLoader := site.NewDomainMapLoader()
+	siteResolver = site.NewResolver(domainMapLoader)
+
+	urlMapLoader := page.NewURLMapLoader()
+	pageResolver = page.NewResolver(urlMapLoader)
+
+	contentLoader = content.NewLoader()
+
+	templateLoader := render.NewTemplateLoader("templates/")
+	renderer = render.NewRenderer(templateLoader)
+
 	http.HandleFunc("/", index)
 	http.ListenAndServe(":8080", nil)
 }
 
 func index(w http.ResponseWriter, r *http.Request) {
-	path := ("home.html")
-	siteID, err := resolver.Resolve(r.Host)
+	fmt.Print(r.URL)
+	u, err := url.Parse(fmt.Sprintf("http://%s%s", r.Host, r.RequestURI))
 	if err != nil {
-		log.Print(err)
+		w.WriteHeader(404)
+		w.Write([]byte(err.Error()))
+		return
+	}
+	siteContext, err := siteResolver.Resolve(u)
+	if err != nil {
+		w.WriteHeader(404)
+		w.Write([]byte(err.Error()))
+		return
 	}
 
-	log.Print(siteID)
-	layout := tpl.Lookup("layout.html")
-	layout, _ = layout.Clone()
-	t := tpl.Lookup(path)
-	_, _ = layout.AddParseTree("content", t.Tree)
-	layout.Execute(w, "")
+	pageContext, err := pageResolver.Resolve(siteContext, u)
+	if err != nil {
+		w.WriteHeader(404)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	content := contentLoader.Load(siteContext, pageContext)
+
+	html, err := renderer.RenderHTML(content)
+	if err != nil {
+		w.WriteHeader(500)
+		w.Write([]byte(err.Error()))
+		return
+	}
+
+	w.Write(html)
 }

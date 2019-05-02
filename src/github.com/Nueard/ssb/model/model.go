@@ -1,4 +1,4 @@
-package site
+package context
 
 // Site holds the root information about a site
 type Site struct {

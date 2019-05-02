@@ -1,0 +1,6 @@
+{{ $this := . }}
+
+<h1 style="color: red;">Fragment 1!</h1>
+{{ range $fragmentID :=  .Fragments }}
+    {{ CallTemplate (index $this.Fragments $fragmentID) }}
+{{ end }}
