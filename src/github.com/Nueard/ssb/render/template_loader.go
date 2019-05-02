@@ -8,7 +8,7 @@ import (
 	"path/filepath"
 	"strings"
 
-	"github.com/Nueard/ssb/content"
+	fragmentloader "github.com/Nueard/ssb/content/fragment-loader"
 )
 
 // ITemplateLoader is the interface of TemplateLoader
@@ -35,7 +35,7 @@ func (tl *TemplateLoader) Load() *template.Template {
 
 	funcMap := template.FuncMap{
 		// The name "title" is what the function will be called in the template text.
-		"CallTemplate": func(fragment content.Fragment) (ret template.HTML, err error) {
+		"CallTemplate": func(fragment fragmentloader.Fragment) (ret template.HTML, err error) {
 			buf := bytes.NewBuffer([]byte{})
 			err = tpl.ExecuteTemplate(buf, fragment.Template, fragment)
 			ret = template.HTML(buf.String())

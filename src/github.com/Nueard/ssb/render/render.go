@@ -22,11 +22,11 @@ func NewRenderer(templateLoader *TemplateLoader) *Renderer {
 
 // RenderHTML takes a page content object and returns the generated HTML for that page
 func (r *Renderer) RenderHTML(c content.Content) ([]byte, error) {
-	layout := r.tpl.Lookup(c.Template)
+	layout := r.tpl.Lookup(c.Fragment.Template)
 	if layout == nil {
-		return []byte{}, fmt.Errorf("template %s not found", c.Template)
+		return []byte{}, fmt.Errorf("template %s not found", c.Fragment.Template)
 	}
 	w := bytes.NewBuffer([]byte{})
-	err := layout.Execute(w, c)
+	err := layout.Execute(w, c.Fragment)
 	return w.Bytes(), err
 }

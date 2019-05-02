@@ -7,6 +7,8 @@ import (
 	"net/url"
 
 	"github.com/Nueard/ssb/content"
+	fragmentloader "github.com/Nueard/ssb/content/fragment-loader"
+	pageloader "github.com/Nueard/ssb/content/page-loader"
 	"github.com/Nueard/ssb/context/page"
 	"github.com/Nueard/ssb/context/site"
 	"github.com/Nueard/ssb/render"
@@ -25,7 +27,10 @@ func main() {
 	urlMapLoader := page.NewURLMapLoader()
 	pageResolver = page.NewResolver(urlMapLoader)
 
-	contentLoader = content.NewLoader()
+	rawFragmentLoader := fragmentloader.NewRawLoader()
+	deepFragmentLoader := fragmentloader.NewDeepLoader(rawFragmentLoader)
+	pageLoader := pageloader.NewLoader()
+	contentLoader = content.NewLoader(pageLoader, deepFragmentLoader)
 
 	templateLoader := render.NewTemplateLoader("templates/")
 	renderer = render.NewRenderer(templateLoader)
